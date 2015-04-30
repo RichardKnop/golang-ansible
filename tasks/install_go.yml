@@ -25,6 +25,8 @@
     - "export PATH=$PATH:/usr/local/go/bin"
 
 - name: Create go code folders
+  sudo : yes
+  sudo_user: "{{ golang.app_user }}"
   file:
     dest: "{{ item }}"
     state: directory
