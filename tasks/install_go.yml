@@ -1,0 +1,37 @@
+---
+
+- name: Download the Go tarball
+  sudo: yes
+  get_url:
+    url: "http://golang.org/dl/{{ golang.tarball }}"
+    dest: "/usr/local/src/{{ golang.tarball }}"
+    sha256sum: "{{ golang.tarball_checksum }}"
+    force: no
+
+- name: Extract the Go tarball
+  sudo: yes
+  command: "tar -C /usr/local -xf /usr/local/src/{{ golang.tarball }}"
+
+- name: Add Go environment variables to .bashrc
+  sudo : yes
+  sudo_user: "{{ golang.app_user }}"
+  lineinfile:
+    dest: "/home/{{ golang.app_user }}/.bashrc"
+    line: "{{ item }}"
+    insertafter: EOF
+  with_items:
+    - "export GOPATH=/home/{{ golang.app_user }}/go"
+    - "export PATH=$GOPATH/bin:$PATH"
+    - "export PATH=$PATH:/usr/local/go/bin"
+
+- name: Create go code folders
+  file:
+    dest: "{{ item }}"
+    state: directory
+    recurse: yes
+    owner: "{{ golang.app_user }}"
+    group: "{{ golang.apps_group }}"
+  with_items:
+    - "/home/{{ golang.app_user }}/go/src/github.com"
+    - "/home/{{ golang.app_user }}/go/pkg"
+    - "/home/{{ golang.app_user }}/go/bin"

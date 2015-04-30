@@ -1,0 +1,5 @@
+---
+
+- include: create_users_and_groups.yml
+
+- include: install_go.yml

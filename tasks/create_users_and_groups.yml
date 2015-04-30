@@ -1,0 +1,21 @@
+---
+
+- name: Create the application user
+  sudo: yes
+  user:
+    name: "{{ golang.app_user }}"
+    state: present
+
+- name: Create the application group
+  sudo: yes
+  group:
+    name: "{{ golang.apps_group }}"
+    system: yes
+    state: present
+
+- name: Add the application user to the application group
+  sudo: yes
+  user:
+    name: "{{ golang.app_user }}"
+    group: "{{ golang.apps_group }}"
+    state: present
